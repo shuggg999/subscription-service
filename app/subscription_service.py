@@ -20,6 +20,9 @@ import hashlib
 import hmac
 import secrets
 from datetime import datetime, timedelta
+from flask import Flask, request, jsonify, render_template, redirect, url_for, abort
+from .models import UserManager, SubscriptionManager
+from .auth_api import auth_api
 
 # 配置日志
 logging.basicConfig(
@@ -692,6 +695,56 @@ def main():
             
     else:
         parser.print_help()
+
+# 在app初始化之后注册蓝图
+app = Flask(__name__)
+app.secret_key = os.environ.get('SECRET_KEY', 'your_secure_secret_key')
+app.register_blueprint(auth_api, url_prefix='/auth')
+
+# 添加现有认证方案与新认证方案的兼容性
+# 在订阅处理函数中增加API密钥认证支持
+@app.route('/sub', methods=['GET'])
+def get_subscription():
+    # 支持新的API密钥认证
+    api_key = request.args.get('api_key')
+    if api_key:
+        user_manager = UserManager()
+        user_result = user_manager.get_user_by_api_key(api_key)
+        if user_result["success"]:
+            # 使用用户ID获取订阅
+            user_id = user_result["user_id"]
+            sub_manager = SubscriptionManager()
+            subscriptions = sub_manager.get_subscriptions(user_id)
+            
+            if not subscriptions["success"] or not subscriptions["subscriptions"]:
+                return "未配置订阅源", 404
+            
+            # 处理订阅并返回
+            # 这里需要保留原有的订阅处理代码
+            # ...
+    
+    # 向后兼容旧的令牌认证
+    token = request.args.get('token')
+    # 原有的令牌认证逻辑
+    # ...
+
+# 添加主页重定向到登录页面
+@app.route('/', methods=['GET'])
+def index():
+    return redirect('/auth/login.html')
+
+# 添加静态HTML页面路由
+@app.route('/auth/login.html', methods=['GET'])
+def login_page():
+    return render_template('login.html')
+
+@app.route('/auth/register.html', methods=['GET'])
+def register_page():
+    return render_template('register.html')
+
+@app.route('/auth/dashboard.html', methods=['GET'])
+def dashboard_page():
+    return render_template('dashboard.html')
 
 if __name__ == "__main__":
     main()
