@@ -7,100 +7,245 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <style>
-        body {
-            background-color: #f8f9fa;
-            overflow-x: hidden;
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --dark-color: #343a40;
+            --light-color: #f8f9fa;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
         }
+        
+        body {
+            background-color: var(--light-color);
+            overflow-x: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        
+        /* 页面主要容器 */
+        .container-fluid {
+            padding: 0;
+        }
+        
+        /* 导航栏样式 */
+        .navbar {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 0.5rem 1rem;
+        }
+        
+        .navbar-brand {
+            font-weight: bold;
+            padding: 0.75rem 0;
+            font-size: 1.25rem;
+        }
+        
+        /* 侧边栏样式 */
         .sidebar {
             position: fixed;
             top: 0;
             bottom: 0;
             left: 0;
             z-index: 100;
-            padding: 48px 0 0;
-            box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
-            background-color: #343a40;
-            width: 220px; /* 修改固定宽度 */
+            padding: 56px 0 0; /* 减小上边距以适应导航栏高度 */
+            box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.1);
+            background-color: var(--dark-color);
+            width: 200px; /* 稍微减小侧边栏宽度 */
+            transition: all 0.3s;
         }
+        
         .sidebar-sticky {
             position: relative;
             top: 0;
-            height: calc(100vh - 48px);
-            padding-top: .5rem;
+            height: calc(100vh - 56px);
+            padding-top: 0.5rem;
             overflow-x: hidden;
             overflow-y: auto;
         }
+        
         .sidebar .nav-link {
             font-weight: 500;
-            color: rgba(255, 255, 255, .75);
-            padding: .5rem 1rem;
+            color: rgba(255, 255, 255, 0.75);
+            padding: 0.75rem 1rem;
+            margin: 0.2rem 0;
+            border-radius: 0.25rem;
+            transition: all 0.2s;
         }
+        
         .sidebar .nav-link:hover {
             color: #fff;
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
         }
+        
         .sidebar .nav-link.active {
             color: #fff;
-            background-color: rgba(255, 255, 255, .1);
+            background-color: rgba(52, 152, 219, 0.5);
         }
+        
         .sidebar .nav-link .bi {
-            margin-right: .5rem;
+            margin-right: 0.5rem;
         }
-        .navbar-brand {
-            padding-top: .75rem;
-            padding-bottom: .75rem;
-        }
+        
+        /* 主内容区域样式 */
         .main-content {
-            margin-left: 220px; /* 与侧边栏宽度保持一致 */
+            margin-left: 200px; /* 与侧边栏宽度保持一致 */
             padding: 1.5rem;
-            width: calc(100% - 220px); /* 确保内容区域宽度正确 */
+            width: calc(100% - 200px); /* 确保内容区域宽度正确 */
+            transition: all 0.3s;
         }
-        .alert {
-            display: none;
+        
+        /* 卡片样式优化 */
+        .card {
+            border-radius: 0.5rem;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            border: none;
+            margin-bottom: 1.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-header {
+            background-color: rgba(0, 0, 0, 0.03);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            font-weight: 600;
+            padding: 0.75rem 1.25rem;
+        }
+        
+        .card-body {
+            padding: 1.25rem;
+        }
+        
+        /* 表格样式优化 */
+        .table-responsive {
+            overflow-x: auto;
+            border-radius: 0.5rem;
+        }
+        
+        .table {
+            margin-bottom: 0;
+        }
+        
+        .table thead th {
+            border-top: none;
+            background-color: rgba(0, 0, 0, 0.03);
+            font-weight: 600;
+        }
+        
+        /* 按钮样式优化 */
+        .btn {
+            border-radius: 0.25rem;
+            font-weight: 500;
+            padding: 0.375rem 0.75rem;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        
+        /* 加载中动画 */
+        .loader {
+            border: 3px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 3px solid var(--primary-color);
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-right: 0.5rem;
+            vertical-align: middle;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* 响应式布局 */
         @media (max-width: 767.98px) {
             .sidebar {
                 width: 100%;
                 position: relative;
                 padding-top: 0;
+                height: auto;
             }
+            
             .main-content {
                 margin-left: 0;
                 width: 100%;
+                padding: 1rem;
+            }
+            
+            .sidebar-sticky {
+                height: auto;
             }
         }
-        .loader {
-            border: 4px solid #f3f3f3;
-            border-radius: 50%;
-            border-top: 4px solid #3498db;
-            width: 20px;
-            height: 20px;
-            -webkit-animation: spin 2s linear infinite;
-            animation: spin 2s linear infinite;
-            display: inline-block;
-            margin-left: 10px;
-            vertical-align: middle;
+        
+        /* 提示信息样式 */
+        .alert {
+            display: none;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            animation: fadeIn 0.3s;
         }
-        @-webkit-keyframes spin {
-            0% { -webkit-transform: rotate(0deg); }
-            100% { -webkit-transform: rotate(360deg); }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        
+        /* 表单元素样式 */
+        .form-control, .form-select {
+            border-radius: 0.25rem;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #ced4da;
         }
-        /* 修复按钮点击问题 */
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
+        }
+        
+        /* 确保按钮可点击 */
         .card-body .btn {
             position: relative;
-            z-index: 10;
+            z-index: 2;
         }
-        /* 确保内容在小屏幕上正确显示 */
-        .container-fluid {
-            padding-left: 0;
-            padding-right: 0;
+        
+        /* 标题样式 */
+        .h2 {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
         }
-        /* 修复表格在小屏幕上的显示 */
-        .table-responsive {
-            overflow-x: auto;
+        
+        /* 模态框样式 */
+        .modal-content {
+            border-radius: 0.5rem;
+            border: none;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        }
+        
+        .modal-header {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            background-color: rgba(0, 0, 0, 0.03);
+        }
+        
+        .modal-footer {
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
         }
     </style>
 </head>
@@ -108,7 +253,7 @@
     <nav class="navbar navbar-dark bg-dark fixed-top">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">订阅服务管理系统</a>
-            <div class="d-flex">
+            <div class="d-flex align-items-center">
                 <span class="navbar-text me-3 d-none d-md-inline" id="user-info">
                     <i class="bi bi-person-circle"></i> <span id="username">加载中...</span>
                 </span>
@@ -327,11 +472,20 @@
                     <form id="add-subscription-form">
                         <div class="mb-3">
                             <label for="subscription-name" class="form-label">名称</label>
-                            <input type="text" class="form-control" id="subscription-name" required>
+                            <input type="text" class="form-control" id="subscription-name" placeholder="给这个订阅源起个名字，例如：我的VPS" required>
                         </div>
                         <div class="mb-3">
-                            <label for="subscription-url" class="form-label">URL</label>
-                            <input type="url" class="form-control" id="subscription-url-input" required>
+                            <label for="subscription-url-input" class="form-label">URL</label>
+                            <input type="url" class="form-control" id="subscription-url-input" placeholder="https://example.com/sub" required>
+                            <div class="form-text mt-2">
+                                <i class="bi bi-info-circle"></i> 填写说明：
+                                <ul class="mt-1">
+                                    <li>请填写完整的订阅链接，以http://或https://开头</li>
+                                    <li>支持的订阅格式：V2ray、Clash、Shadowsocks等服务提供商提供的订阅地址</li>
+                                    <li>不要直接填写vless://、vmess://等协议链接，应填写包含这些协议内容的订阅链接</li>
+                                    <li>例如：<code>https://example.com/api/v1/client/subscribe?token=123456</code></li>
+                                </ul>
+                            </div>
                         </div>
                     </form>
                 </div>
