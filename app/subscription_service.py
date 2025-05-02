@@ -734,7 +734,7 @@ def get_subscription():
                 
                 # 处理订阅并返回
                 # 收集订阅URL
-                subscription_urls = [s["url"] for s in subscriptions["subscriptions"] if s["active"]]
+                subscription_urls = [s["url"] for s in subscriptions["subscriptions"] if s["is_active"]]
                 
                 if not subscription_urls:
                     return "无可用订阅源", 404
