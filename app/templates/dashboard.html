@@ -8,146 +8,158 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <style>
         :root {
-            --primary-color: #3498db;
-            --secondary-color: #2980b9;
-            --dark-color: #343a40;
-            --light-color: #f8f9fa;
-            --success-color: #28a745;
-            --warning-color: #ffc107;
-            --danger-color: #dc3545;
+            --primary-color: #4e73df;
+            --secondary-color: #3a57c9;
+            --dark-color: #293145;
+            --light-color: #f8f9fc;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --sidebar-width: 220px;
+            --header-height: 56px;
         }
         
         body {
-            background-color: var(--light-color);
-            overflow-x: hidden;
+            background-color: #f8f9fc;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            overflow-x: hidden;
+            color: #434a54;
         }
         
-        /* 页面主要容器 */
-        .container-fluid {
+        /* 顶部导航栏 */
+        .top-navbar {
+            background-color: var(--primary-color);
+            color: white;
             padding: 0;
-        }
-        
-        /* 导航栏样式 */
-        .navbar {
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            padding: 0.5rem 1rem;
+            height: var(--header-height);
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: 0;
+            z-index: 1030;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
         }
         
         .navbar-brand {
-            font-weight: bold;
-            padding: 0.75rem 0;
-            font-size: 1.25rem;
+            color: white;
+            font-weight: 700;
+            padding: 0.5rem 1rem;
+            font-size: 1.2rem;
+            margin-right: 1rem;
         }
         
-        /* 侧边栏样式 */
+        /* 侧边栏 */
         .sidebar {
             position: fixed;
             top: 0;
-            bottom: 0;
             left: 0;
-            z-index: 100;
-            padding: 56px 0 0; /* 减小上边距以适应导航栏高度 */
-            box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.1);
-            background-color: var(--dark-color);
-            width: 180px; /* 减小侧边栏宽度以提供更多内容空间 */
+            bottom: 0;
+            width: var(--sidebar-width);
+            background-color: white;
+            z-index: 1020;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
             transition: all 0.3s;
+            padding-top: var(--header-height);
         }
         
         .sidebar-sticky {
-            position: relative;
-            top: 0;
-            height: calc(100vh - 56px);
-            padding-top: 0.5rem;
-            overflow-x: hidden;
+            height: calc(100vh - var(--header-height));
             overflow-y: auto;
+            padding-top: 1rem;
         }
         
         .sidebar .nav-link {
-            font-weight: 500;
-            color: rgba(255, 255, 255, 0.75);
+            color: #6c757d;
             padding: 0.75rem 1rem;
-            margin: 0.2rem 0;
-            border-radius: 0.25rem;
+            margin: 0.2rem 0.5rem;
+            border-radius: 5px;
+            font-weight: 500;
             transition: all 0.2s;
         }
         
         .sidebar .nav-link:hover {
-            color: #fff;
-            background-color: rgba(255, 255, 255, 0.1);
-            transform: translateX(5px);
+            background-color: #f8f9fc;
+            color: var(--primary-color);
         }
         
         .sidebar .nav-link.active {
-            color: #fff;
-            background-color: rgba(52, 152, 219, 0.5);
+            background-color: var(--primary-color);
+            color: white;
         }
         
-        .sidebar .nav-link .bi {
+        .sidebar .nav-link i {
             margin-right: 0.5rem;
+            width: 20px;
+            text-align: center;
         }
         
-        /* 主内容区域样式 */
+        /* 主内容区域 */
         .main-content {
-            margin-left: 180px; /* 与侧边栏宽度保持一致 */
-            padding: 1.5rem;
-            width: calc(100% - 180px); /* 确保内容区域宽度正确 */
-            transition: all 0.3s;
-            max-width: 100%;
-            overflow-x: hidden;
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+            padding-top: calc(var(--header-height) + 2rem);
+            min-height: 100vh;
         }
         
-        /* 卡片样式优化 */
+        /* 卡片样式 */
         .card {
-            border-radius: 0.5rem;
-            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
             border: none;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.05);
             margin-bottom: 1.5rem;
             transition: transform 0.2s, box-shadow 0.2s;
+            background-color: white;
         }
         
         .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
         
         .card-header {
-            background-color: rgba(0, 0, 0, 0.03);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            background-color: white;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
             font-weight: 600;
-            padding: 0.75rem 1.25rem;
+            padding: 1rem 1.5rem;
+            border-radius: 10px 10px 0 0 !important;
         }
         
         .card-body {
-            padding: 1.25rem;
+            padding: 1.5rem;
         }
         
-        /* 表格样式优化 */
-        .table-responsive {
-            overflow-x: auto;
-            border-radius: 0.5rem;
-            width: 100%;
+        /* 表格样式 */
+        .table-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.05);
+            overflow: hidden;
         }
         
         .table {
             margin-bottom: 0;
-            width: 100%;
         }
         
-        .table th, .table td {
-            padding: 0.75rem;
-            vertical-align: middle;
+        .table th {
+            background-color: #f8f9fc;
+            font-weight: 600;
+            border-top: none;
+            color: #6c757d;
         }
         
-        /* 确保表格单元格内容不会被截断 */
         .table td {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 200px; /* 设置最大宽度，超出部分将显示省略号 */
+            vertical-align: middle;
+            padding: 0.75rem 1rem;
+            border-color: #f1f3f9;
         }
         
-        /* URL列的特殊处理 */
+        .table tbody tr:hover {
+            background-color: #f8f9fc;
+        }
+        
+        /* URL单元格样式 */
         .url-cell {
             max-width: 300px;
             overflow: hidden;
@@ -155,11 +167,11 @@
             white-space: nowrap;
         }
         
-        /* 按钮样式优化 */
+        /* 按钮样式 */
         .btn {
-            border-radius: 0.25rem;
+            border-radius: 5px;
             font-weight: 500;
-            padding: 0.375rem 0.75rem;
+            padding: 0.5rem 1rem;
             transition: all 0.2s;
         }
         
@@ -174,9 +186,98 @@
             transform: translateY(-2px);
         }
         
-        /* 加载中动画 */
+        .btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.875rem;
+        }
+        
+        /* 信息展示卡片 */
+        .info-card {
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            background-color: white;
+            box-shadow: 0 0 15px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+        }
+        
+        .info-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .info-card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            color: white;
+        }
+        
+        .info-card-primary .info-card-icon {
+            background-color: var(--primary-color);
+        }
+        
+        .info-card-success .info-card-icon {
+            background-color: var(--success-color);
+        }
+        
+        .info-card-warning .info-card-icon {
+            background-color: var(--warning-color);
+        }
+        
+        .info-card-danger .info-card-icon {
+            background-color: var(--danger-color);
+        }
+        
+        .info-card-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .info-card-label {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        /* 页面标题 */
+        .page-title {
+            font-weight: 700;
+            color: #434a54;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 0;
+                padding-top: 0;
+            }
+            
+            .sidebar.show {
+                width: var(--sidebar-width);
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding: 1rem;
+                padding-top: calc(var(--header-height) + 1rem);
+            }
+            
+            .toggle-sidebar {
+                display: block !important;
+            }
+        }
+        
+        /* 加载动画 */
         .loader {
-            border: 3px solid rgba(0, 0, 0, 0.1);
+            border: 3px solid #f3f3f3;
             border-radius: 50%;
             border-top: 3px solid var(--primary-color);
             width: 20px;
@@ -184,7 +285,6 @@
             animation: spin 1s linear infinite;
             display: inline-block;
             margin-right: 0.5rem;
-            vertical-align: middle;
         }
         
         @keyframes spin {
@@ -192,306 +292,256 @@
             100% { transform: rotate(360deg); }
         }
         
-        /* 响应式布局 */
-        @media (max-width: 767.98px) {
-            .sidebar {
-                width: 100%;
-                position: relative;
-                padding-top: 0;
-                height: auto;
-            }
-            
-            .main-content {
-                margin-left: 0;
-                width: 100%;
-                padding: 1rem;
-            }
-            
-            .sidebar-sticky {
-                height: auto;
-            }
-        }
-        
-        /* 提示信息样式 */
+        /* 通知提示 */
         .alert {
             display: none;
-            border-radius: 0.5rem;
+            border-radius: 10px;
             margin-bottom: 1rem;
             padding: 1rem;
-            animation: fadeIn 0.3s;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        /* 表单元素样式 */
-        .form-control, .form-select {
-            border-radius: 0.25rem;
-            padding: 0.5rem 0.75rem;
-            border: 1px solid #ced4da;
-        }
-        
-        .form-control:focus, .form-select:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
-        }
-        
-        /* 确保按钮可点击 */
-        .card-body .btn {
-            position: relative;
-            z-index: 2;
-        }
-        
-        /* 标题样式 */
-        .h2 {
-            font-weight: 600;
-            color: #2c3e50;
-            margin-bottom: 1.5rem;
-        }
-        
-        /* 模态框样式 */
-        .modal-content {
-            border-radius: 0.5rem;
             border: none;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-        }
-        
-        .modal-header {
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-            background-color: rgba(0, 0, 0, 0.03);
-        }
-        
-        .modal-footer {
-            border-top: 1px solid rgba(0, 0, 0, 0.05);
-        }
-        
-        /* 订阅管理部分样式 */
-        #subscriptions .d-flex {
-            margin-bottom: 1rem;
-        }
-        
-        #subscriptions .h2 {
-            margin-bottom: 0;
-            margin-right: 1rem;
+            box-shadow: 0 0 15px rgba(0,0,0,0.05);
         }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-dark bg-dark fixed-top">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">订阅服务管理系统</a>
-            <div class="d-flex align-items-center">
-                <span class="navbar-text me-3 d-none d-md-inline" id="user-info">
-                    <i class="bi bi-person-circle"></i> <span id="username">加载中...</span>
-                </span>
-                <button class="btn btn-outline-danger" id="logout-btn">
-                    <i class="bi bi-box-arrow-right"></i> 注销
-                </button>
-            </div>
+    <!-- 顶部导航栏 -->
+    <nav class="top-navbar">
+        <button class="btn btn-link text-white d-none toggle-sidebar" id="toggle-sidebar-btn">
+            <i class="bi bi-list"></i>
+        </button>
+        <a href="#" class="navbar-brand">订阅服务管理系统</a>
+        <div class="ms-auto d-flex align-items-center me-3">
+            <span class="text-white me-3 d-none d-md-block">
+                <i class="bi bi-person-circle"></i> <span id="username">加载中...</span>
+            </span>
+            <button class="btn btn-outline-light btn-sm" id="logout-btn">
+                <i class="bi bi-box-arrow-right"></i> 注销
+            </button>
         </div>
     </nav>
 
-    <div class="container-fluid">
-        <div class="row">
-            <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block sidebar collapse">
-                <div class="position-sticky sidebar-sticky">
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="#dashboard" data-bs-toggle="tab">
-                                <i class="bi bi-speedometer2"></i> 仪表盘
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#subscriptions" data-bs-toggle="tab">
-                                <i class="bi bi-list-check"></i> 订阅管理
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#subscription-link" data-bs-toggle="tab">
-                                <i class="bi bi-link-45deg"></i> 订阅链接
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#settings" data-bs-toggle="tab">
-                                <i class="bi bi-gear"></i> 设置
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-
-            <main class="main-content">
-                <div class="alert alert-danger" id="error-message" role="alert"></div>
-                <div class="alert alert-success" id="success-message" role="alert"></div>
-
-                <div class="tab-content">
-                    <!-- 仪表盘 -->
-                    <div class="tab-pane fade show active" id="dashboard">
-                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                            <h1 class="h2">仪表盘</h1>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="card mb-4">
-                                    <div class="card-header">
-                                        <i class="bi bi-info-circle"></i> 系统信息
-                                    </div>
-                                    <div class="card-body">
-                                        <p><strong>API密钥:</strong> <span id="api-key">加载中...</span></p>
-                                        <p><strong>账户类型:</strong> <span id="user-role">加载中...</span></p>
-                                        <p><strong>订阅数量:</strong> <span id="subscription-count">加载中...</span></p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="card mb-4">
-                                    <div class="card-header">
-                                        <i class="bi bi-lightbulb"></i> 快速指南
-                                    </div>
-                                    <div class="card-body">
-                                        <ol>
-                                            <li>添加订阅源到您的账户</li>
-                                            <li>生成您的个人订阅链接</li>
-                                            <li>将生成的链接添加到您的客户端</li>
-                                        </ol>
-                                        <button class="btn btn-primary" id="goto-subscriptions-btn">
-                                            <i class="bi bi-plus-circle"></i> 添加订阅源
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 订阅管理 -->
-                    <div class="tab-pane fade" id="subscriptions">
-                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                            <h1 class="h2">订阅管理</h1>
-                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSubscriptionModal">
-                                <i class="bi bi-plus-circle"></i> 添加订阅
-                            </button>
-                        </div>
-
-                        <div class="card">
-                            <div class="card-body p-0">
-                                <div class="table-responsive">
-                                    <table class="table table-striped table-hover m-0">
-                                        <thead>
-                                            <tr>
-                                                <th style="width: 5%;">#</th>
-                                                <th style="width: 15%;">名称</th>
-                                                <th style="width: 35%;">URL</th>
-                                                <th style="width: 15%;">创建时间</th>
-                                                <th style="width: 10%;">状态</th>
-                                                <th style="width: 20%;">操作</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="subscription-list">
-                                            <tr>
-                                                <td colspan="6" class="text-center">
-                                                    <div class="loader"></div> 加载中...
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 订阅链接 -->
-                    <div class="tab-pane fade" id="subscription-link">
-                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                            <h1 class="h2">订阅链接</h1>
-                        </div>
-
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <i class="bi bi-link"></i> 生成订阅链接
-                            </div>
-                            <div class="card-body">
-                                <div class="mb-3">
-                                    <label for="client-type" class="form-label">客户端类型</label>
-                                    <select class="form-select" id="client-type">
-                                        <option value="v2ray">V2Ray</option>
-                                        <option value="clash">Clash</option>
-                                        <option value="shadowrocket">Shadowrocket</option>
-                                        <option value="surge">Surge</option>
-                                        <option value="quanx">Quantumult X</option>
-                                    </select>
-                                </div>
-                                <button class="btn btn-primary" id="generate-link-btn">
-                                    <i class="bi bi-link-45deg"></i> 生成链接
-                                </button>
-
-                                <div id="subscription-url-container" class="mt-4" style="display: none;">
-                                    <label class="form-label">您的订阅链接</label>
-                                    <div class="input-group mb-3">
-                                        <input type="text" class="form-control" id="subscription-url" readonly>
-                                        <button class="btn btn-outline-secondary" type="button" id="copy-link-btn">
-                                            <i class="bi bi-clipboard"></i> 复制
-                                        </button>
-                                    </div>
-                                    <div class="alert alert-info">
-                                        <i class="bi bi-info-circle"></i>
-                                        将此链接添加到您的客户端即可使用。链接中包含您的API密钥，请勿分享给他人。
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 设置 -->
-                    <div class="tab-pane fade" id="settings">
-                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                            <h1 class="h2">设置</h1>
-                        </div>
-
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <i class="bi bi-shield-lock"></i> 账户安全
-                            </div>
-                            <div class="card-body">
-                                <form id="change-password-form">
-                                    <div class="mb-3">
-                                        <label for="current-password" class="form-label">当前密码</label>
-                                        <input type="password" class="form-control" id="current-password" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="new-password" class="form-label">新密码</label>
-                                        <input type="password" class="form-control" id="new-password" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="confirm-new-password" class="form-label">确认新密码</label>
-                                        <input type="password" class="form-control" id="confirm-new-password" required>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">修改密码</button>
-                                </form>
-                            </div>
-                        </div>
-
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <i class="bi bi-key"></i> API密钥
-                            </div>
-                            <div class="card-body">
-                                <p>当前API密钥: <code id="current-api-key">加载中...</code></p>
-                                <button class="btn btn-warning" id="regenerate-api-key-btn">
-                                    <i class="bi bi-arrow-repeat"></i> 重新生成API密钥
-                                </button>
-                                <div class="alert alert-warning mt-3">
-                                    <i class="bi bi-exclamation-triangle"></i>
-                                    重新生成API密钥将使您当前的订阅链接失效，您需要更新客户端中的订阅链接。
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </main>
+    <!-- 侧边栏 -->
+    <div class="sidebar">
+        <div class="sidebar-sticky">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#dashboard" data-bs-toggle="tab">
+                        <i class="bi bi-speedometer2"></i> 仪表盘
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#subscriptions" data-bs-toggle="tab">
+                        <i class="bi bi-list-check"></i> 订阅管理
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#subscription-link" data-bs-toggle="tab">
+                        <i class="bi bi-link-45deg"></i> 订阅链接
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#settings" data-bs-toggle="tab">
+                        <i class="bi bi-gear"></i> 设置
+                    </a>
+                </li>
+            </ul>
         </div>
     </div>
+
+    <!-- 主内容区域 -->
+    <main class="main-content">
+        <div class="alert alert-danger" id="error-message" role="alert"></div>
+        <div class="alert alert-success" id="success-message" role="alert"></div>
+
+        <div class="tab-content">
+            <!-- 仪表盘 -->
+            <div class="tab-pane fade show active" id="dashboard">
+                <h1 class="page-title">仪表盘</h1>
+                
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="info-card info-card-primary">
+                            <div class="info-card-icon">
+                                <i class="bi bi-key"></i>
+                            </div>
+                            <div class="info-card-value" id="api-key-short">加载中...</div>
+                            <div class="info-card-label">API密钥</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="info-card info-card-success">
+                            <div class="info-card-icon">
+                                <i class="bi bi-person-badge"></i>
+                            </div>
+                            <div class="info-card-value" id="user-role">加载中...</div>
+                            <div class="info-card-label">账户类型</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="info-card info-card-warning">
+                            <div class="info-card-icon">
+                                <i class="bi bi-list-ul"></i>
+                            </div>
+                            <div class="info-card-value" id="subscription-count">0</div>
+                            <div class="info-card-label">订阅数量</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="bi bi-info-circle me-2"></i>系统信息
+                            </div>
+                            <div class="card-body">
+                                <p><strong>API密钥:</strong> <span id="api-key">加载中...</span></p>
+                                <p><strong>账户类型:</strong> <span id="user-role-detail">加载中...</span></p>
+                                <p><strong>订阅数量:</strong> <span id="subscription-count-detail">加载中...</span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="bi bi-lightbulb me-2"></i>快速指南
+                            </div>
+                            <div class="card-body">
+                                <ol>
+                                    <li>添加订阅源到您的账户</li>
+                                    <li>生成您的个人订阅链接</li>
+                                    <li>将生成的链接添加到您的客户端</li>
+                                </ol>
+                                <button class="btn btn-primary mt-3" id="goto-subscriptions-btn">
+                                    <i class="bi bi-plus-circle me-2"></i>添加订阅源
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 订阅管理 -->
+            <div class="tab-pane fade" id="subscriptions">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h1 class="page-title">订阅管理</h1>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSubscriptionModal">
+                        <i class="bi bi-plus-circle me-2"></i>添加订阅
+                    </button>
+                </div>
+
+                <div class="table-container">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th style="width: 5%;" class="text-center">#</th>
+                                    <th style="width: 15%;">名称</th>
+                                    <th style="width: 35%;">URL</th>
+                                    <th style="width: 15%;">创建时间</th>
+                                    <th style="width: 10%;" class="text-center">状态</th>
+                                    <th style="width: 20%;" class="text-center">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="subscription-list">
+                                <tr>
+                                    <td colspan="6" class="text-center py-4">
+                                        <div class="loader"></div> 加载中...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 订阅链接 -->
+            <div class="tab-pane fade" id="subscription-link">
+                <h1 class="page-title">订阅链接</h1>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-link me-2"></i>生成订阅链接
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="client-type" class="form-label">客户端类型</label>
+                            <select class="form-select" id="client-type">
+                                <option value="v2ray">V2Ray</option>
+                                <option value="clash">Clash</option>
+                                <option value="shadowrocket">Shadowrocket</option>
+                                <option value="surge">Surge</option>
+                                <option value="quanx">Quantumult X</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" id="generate-link-btn">
+                            <i class="bi bi-link-45deg me-2"></i>生成链接
+                        </button>
+
+                        <div id="subscription-url-container" class="mt-4" style="display: none;">
+                            <label class="form-label">您的订阅链接</label>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" id="subscription-url" readonly>
+                                <button class="btn btn-outline-primary" type="button" id="copy-link-btn">
+                                    <i class="bi bi-clipboard me-1"></i>复制
+                                </button>
+                            </div>
+                            <div class="alert alert-info">
+                                <i class="bi bi-info-circle me-2"></i>
+                                将此链接添加到您的客户端即可使用。链接中包含您的API密钥，请勿分享给他人。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 设置 -->
+            <div class="tab-pane fade" id="settings">
+                <h1 class="page-title">设置</h1>
+                
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="bi bi-shield-lock me-2"></i>账户安全
+                    </div>
+                    <div class="card-body">
+                        <form id="change-password-form">
+                            <div class="mb-3">
+                                <label for="current-password" class="form-label">当前密码</label>
+                                <input type="password" class="form-control" id="current-password" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="new-password" class="form-label">新密码</label>
+                                <input type="password" class="form-control" id="new-password" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="confirm-new-password" class="form-label">确认新密码</label>
+                                <input type="password" class="form-control" id="confirm-new-password" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle me-2"></i>修改密码
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-key me-2"></i>API密钥
+                    </div>
+                    <div class="card-body">
+                        <p>当前API密钥: <code id="current-api-key">加载中...</code></p>
+                        <button class="btn btn-warning" id="regenerate-api-key-btn">
+                            <i class="bi bi-arrow-repeat me-2"></i>重新生成API密钥
+                        </button>
+                        <div class="alert alert-warning mt-3">
+                            <i class="bi bi-exclamation-triangle me-2"></i>
+                            重新生成API密钥将使您当前的订阅链接失效，您需要更新客户端中的订阅链接。
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
 
     <!-- 添加订阅模态框 -->
     <div class="modal fade" id="addSubscriptionModal" tabindex="-1" aria-labelledby="addSubscriptionModalLabel" aria-hidden="true">
@@ -530,297 +580,417 @@
         </div>
     </div>
 
+    <!-- JavaScript 依赖 -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
     <script>
-        // 检查用户是否已登录
-        function checkAuthentication() {
-            fetch('/auth/me')
-                .then(response => {
-                    if (!response.ok) {
-                        // 如果未登录，重定向到登录页面
-                        window.location.href = 'login.html';
-                        return null;
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data && data.success) {
-                        // 更新用户信息
-                        document.getElementById('username').textContent = data.user.username;
-                        document.getElementById('api-key').textContent = data.user.api_key;
-                        document.getElementById('current-api-key').textContent = data.user.api_key;
-                        document.getElementById('user-role').textContent = 
-                            data.user.role === 'admin' ? '管理员' : '普通用户';
-                        
-                        // 加载订阅数据
-                        loadSubscriptions();
-                    }
-                })
-                .catch(error => {
-                    console.error('验证用户失败:', error);
-                    showError('验证用户失败，请重新登录');
+        // 全局变量
+        let userApiKey = '';
+        let userSubscriptions = [];
+
+        // 初始化函数
+        document.addEventListener('DOMContentLoaded', () => {
+            // 初始化UI
+            initUI();
+            
+            // 加载用户信息
+            loadUserInfo();
+            
+            // 加载订阅列表
+            loadSubscriptions();
+            
+            // 绑定事件监听器
+            bindEventListeners();
+        });
+
+        // 初始化UI
+        function initUI() {
+            // 激活Bootstrap提示框
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+            
+            // 初始化Tab切换
+            const tabTriggerList = [].slice.call(document.querySelectorAll('a[data-bs-toggle="tab"]'));
+            tabTriggerList.forEach(function (tabTriggerEl) {
+                tabTriggerEl.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('show', 'active'));
+                    document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+                    target.classList.add('show', 'active');
+                    this.classList.add('active');
                 });
+            });
+
+            // 侧边栏切换按钮
+            const toggleSidebarBtn = document.getElementById('toggle-sidebar-btn');
+            if (toggleSidebarBtn) {
+                toggleSidebarBtn.addEventListener('click', () => {
+                    document.querySelector('.sidebar').classList.toggle('show');
+                });
+            }
+        }
+
+        // 加载用户信息
+        async function loadUserInfo() {
+            try {
+                const response = await axios.get('/api/user/info');
+                const userData = response.data;
+                
+                // 更新用户信息
+                document.getElementById('username').textContent = userData.username;
+                document.getElementById('api-key').textContent = userData.api_key;
+                document.getElementById('api-key-short').textContent = userData.api_key.substring(0, 8) + '...';
+                document.getElementById('current-api-key').textContent = userData.api_key;
+                document.getElementById('user-role').textContent = userData.role;
+                document.getElementById('user-role-detail').textContent = userData.role;
+                
+                // 保存API密钥
+                userApiKey = userData.api_key;
+            } catch (error) {
+                showError('加载用户信息失败: ' + (error.response?.data?.message || error.message));
+            }
         }
 
         // 加载订阅列表
-        function loadSubscriptions() {
-            fetch('/auth/subscriptions')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        const subscriptionList = document.getElementById('subscription-list');
-                        const subscriptions = data.subscriptions;
-                        
-                        document.getElementById('subscription-count').textContent = subscriptions.length;
-                        
-                        if (subscriptions.length === 0) {
-                            subscriptionList.innerHTML = `
-                                <tr>
-                                    <td colspan="6" class="text-center">
-                                        暂无订阅，请添加新的订阅源
-                                    </td>
-                                </tr>
-                            `;
-                            return;
-                        }
-                        
-                        let html = '';
-                        subscriptions.forEach((sub, index) => {
-                            html += `
-                                <tr>
-                                    <td class="text-center">${index + 1}</td>
-                                    <td>${sub.name}</td>
-                                    <td class="url-cell" title="${sub.url}">${sub.url}</td>
-                                    <td>${new Date(sub.created_at).toLocaleString()}</td>
-                                    <td class="text-center">
-                                        <span class="badge ${sub.is_active ? 'bg-success' : 'bg-danger'}">
-                                            ${sub.is_active ? '启用' : '禁用'}
-                                        </span>
-                                    </td>
-                                    <td class="text-center">
-                                        <button class="btn btn-sm btn-${sub.is_active ? 'warning' : 'success'} toggle-status-btn me-1" 
-                                                data-id="${sub.id}" data-status="${sub.is_active}">
-                                            ${sub.is_active ? '禁用' : '启用'}
-                                        </button>
-                                        <button class="btn btn-sm btn-danger delete-subscription-btn" data-id="${sub.id}">
-                                            删除
-                                        </button>
-                                    </td>
-                                </tr>
-                            `;
-                        });
-                        
-                        subscriptionList.innerHTML = html;
-                        
-                        // 添加删除订阅事件监听
-                        document.querySelectorAll('.delete-subscription-btn').forEach(button => {
-                            button.addEventListener('click', function() {
-                                const id = this.getAttribute('data-id');
-                                deleteSubscription(id);
-                            });
-                        });
-                        
-                        // 添加切换状态事件监听
-                        document.querySelectorAll('.toggle-status-btn').forEach(button => {
-                            button.addEventListener('click', function() {
-                                const id = this.getAttribute('data-id');
-                                const currentStatus = this.getAttribute('data-status') === 'true';
-                                toggleSubscriptionStatus(id, !currentStatus);
-                            });
-                        });
-                    } else {
-                        showError(data.message || '加载订阅失败');
-                    }
-                })
-                .catch(error => {
-                    console.error('加载订阅失败:', error);
-                    showError('加载订阅失败，请刷新页面重试');
+        async function loadSubscriptions() {
+            try {
+                const response = await axios.get('/api/subscriptions');
+                const subscriptions = response.data.subscriptions;
+                
+                // 保存订阅
+                userSubscriptions = subscriptions;
+                
+                // 更新订阅计数
+                document.getElementById('subscription-count').textContent = subscriptions.length;
+                document.getElementById('subscription-count-detail').textContent = subscriptions.length;
+                
+                // 清空列表
+                const subscriptionList = document.getElementById('subscription-list');
+                subscriptionList.innerHTML = '';
+                
+                // 如果没有订阅
+                if (subscriptions.length === 0) {
+                    subscriptionList.innerHTML = `
+                        <tr>
+                            <td colspan="6" class="text-center py-4">
+                                <i class="bi bi-exclamation-circle me-2"></i>
+                                您还没有添加任何订阅源
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                // 添加订阅到列表
+                subscriptions.forEach((sub, index) => {
+                    const row = document.createElement('tr');
+                    
+                    // 创建日期格式化
+                    const createdDate = new Date(sub.created_at);
+                    const formattedDate = createdDate.toLocaleDateString() + ' ' + createdDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                    
+                    // 状态显示
+                    const statusClass = sub.active ? 'text-success' : 'text-danger';
+                    const statusIcon = sub.active ? 'bi-check-circle-fill' : 'bi-x-circle-fill';
+                    const statusText = sub.active ? '正常' : '禁用';
+                    
+                    row.innerHTML = `
+                        <td class="text-center">${index + 1}</td>
+                        <td>${sub.name}</td>
+                        <td class="url-cell" title="${sub.url}">${sub.url}</td>
+                        <td>${formattedDate}</td>
+                        <td class="text-center"><span class="${statusClass}"><i class="bi ${statusIcon} me-1"></i>${statusText}</span></td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-outline-primary me-1" data-action="test" data-id="${sub.id}" title="测试订阅源">
+                                <i class="bi bi-lightning-charge"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-warning me-1" data-action="edit" data-id="${sub.id}" title="编辑订阅源">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" data-action="delete" data-id="${sub.id}" title="删除订阅源">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    `;
+                    
+                    // 添加操作事件监听
+                    const buttons = row.querySelectorAll('button[data-action]');
+                    buttons.forEach(button => {
+                        button.addEventListener('click', handleSubscriptionAction);
+                    });
+                    
+                    subscriptionList.appendChild(row);
                 });
+            } catch (error) {
+                showError('加载订阅列表失败: ' + (error.response?.data?.message || error.message));
+                document.getElementById('subscription-list').innerHTML = `
+                    <tr>
+                        <td colspan="6" class="text-center py-4">
+                            <i class="bi bi-exclamation-circle me-2"></i>
+                            加载失败，请刷新页面重试
+                        </td>
+                    </tr>
+                `;
+            }
         }
 
-        // 添加订阅
-        function addSubscription() {
-            const name = document.getElementById('subscription-name').value;
-            const url = document.getElementById('subscription-url-input').value;
+        // 处理订阅操作
+        async function handleSubscriptionAction(event) {
+            const action = event.currentTarget.getAttribute('data-action');
+            const subId = event.currentTarget.getAttribute('data-id');
             
-            if (!name || !url) {
-                showError('名称和URL不能为空');
+            switch (action) {
+                case 'test':
+                    await testSubscription(subId);
+                    break;
+                case 'edit':
+                    await editSubscription(subId);
+                    break;
+                case 'delete':
+                    await deleteSubscription(subId);
+                    break;
+            }
+        }
+
+        // 测试订阅
+        async function testSubscription(subId) {
+            try {
+                showInfo('正在测试订阅源...');
+                
+                const response = await axios.post(`/api/subscriptions/${subId}/test`);
+                
+                if (response.data.success) {
+                    showSuccess('订阅源测试成功!');
+                } else {
+                    showError('订阅源测试失败: ' + response.data.message);
+                }
+            } catch (error) {
+                showError('测试订阅源失败: ' + (error.response?.data?.message || error.message));
+            }
+        }
+
+        // 编辑订阅
+        async function editSubscription(subId) {
+            const subscription = userSubscriptions.find(sub => sub.id === subId);
+            if (!subscription) {
+                showError('未找到订阅信息');
                 return;
             }
             
-            fetch('/auth/subscriptions', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    name: name,
-                    url: url
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    showSuccess(data.message || '订阅添加成功');
-                    // 关闭模态框
-                    const modal = bootstrap.Modal.getInstance(document.getElementById('addSubscriptionModal'));
-                    modal.hide();
-                    // 重新加载订阅列表
-                    loadSubscriptions();
-                } else {
-                    showError(data.message || '添加订阅失败');
-                }
-            })
-            .catch(error => {
-                console.error('添加订阅失败:', error);
-                showError('添加订阅失败，请重试');
-            });
+            // 这里实现编辑逻辑，可以使用模态框等
+            alert('编辑功能尚未实现');
         }
 
         // 删除订阅
-        function deleteSubscription(id) {
-            if (!confirm('确定要删除此订阅吗？此操作无法撤销。')) {
+        async function deleteSubscription(subId) {
+            if (!confirm('确定要删除此订阅源吗？此操作不可恢复。')) {
                 return;
             }
             
-            fetch(`/auth/subscriptions/${id}`, {
-                method: 'DELETE'
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    showSuccess(data.message || '订阅删除成功');
-                    // 重新加载订阅列表
-                    loadSubscriptions();
+            try {
+                const response = await axios.delete(`/api/subscriptions/${subId}`);
+                
+                if (response.data.success) {
+                    showSuccess('订阅源已成功删除');
+                    await loadSubscriptions(); // 重新加载订阅列表
                 } else {
-                    showError(data.message || '删除订阅失败');
+                    showError('删除订阅源失败: ' + response.data.message);
                 }
-            })
-            .catch(error => {
-                console.error('删除订阅失败:', error);
-                showError('删除订阅失败，请重试');
-            });
-        }
-
-        // 切换订阅状态
-        function toggleSubscriptionStatus(id, isActive) {
-            fetch(`/auth/subscriptions/${id}/status`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    is_active: isActive
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    showSuccess(data.message || `订阅${isActive ? '启用' : '禁用'}成功`);
-                    // 重新加载订阅列表
-                    loadSubscriptions();
-                } else {
-                    showError(data.message || '更新订阅状态失败');
-                }
-            })
-            .catch(error => {
-                console.error('更新订阅状态失败:', error);
-                showError('更新订阅状态失败，请重试');
-            });
+            } catch (error) {
+                showError('删除订阅源失败: ' + (error.response?.data?.message || error.message));
+            }
         }
 
         // 生成订阅链接
-        function generateSubscriptionLink() {
+        async function generateSubscriptionLink() {
             const clientType = document.getElementById('client-type').value;
             
-            fetch(`/auth/generate_subscription_link?client_type=${clientType}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        document.getElementById('subscription-url').value = data.subscription_url;
-                        document.getElementById('subscription-url-container').style.display = 'block';
-                    } else {
-                        showError(data.message || '生成订阅链接失败');
-                    }
-                })
-                .catch(error => {
-                    console.error('生成订阅链接失败:', error);
-                    showError('生成订阅链接失败，请重试');
-                });
+            try {
+                const response = await axios.get(`/api/subscriptions/link?type=${clientType}`);
+                
+                if (response.data.url) {
+                    document.getElementById('subscription-url').value = response.data.url;
+                    document.getElementById('subscription-url-container').style.display = 'block';
+                    showSuccess('订阅链接生成成功');
+                } else {
+                    showError('生成订阅链接失败: ' + response.data.message);
+                }
+            } catch (error) {
+                showError('生成订阅链接失败: ' + (error.response?.data?.message || error.message));
+            }
         }
 
-        // 复制链接到剪贴板
-        function copyLinkToClipboard() {
-            const subscriptionUrl = document.getElementById('subscription-url');
-            subscriptionUrl.select();
+        // 复制订阅链接
+        function copySubscriptionLink() {
+            const urlInput = document.getElementById('subscription-url');
+            urlInput.select();
             document.execCommand('copy');
             
             showSuccess('链接已复制到剪贴板');
         }
 
-        // 注销
-        function logout() {
-            fetch('/auth/logout', {
-                method: 'POST'
-            })
-            .then(response => response.json())
-            .then(data => {
-                window.location.href = 'login.html';
-            })
-            .catch(error => {
-                console.error('注销失败:', error);
-                // 即使请求失败也跳转到登录页
-                window.location.href = 'login.html';
+        // 添加订阅
+        async function addSubscription() {
+            const name = document.getElementById('subscription-name').value.trim();
+            const url = document.getElementById('subscription-url-input').value.trim();
+            
+            if (!name || !url) {
+                showError('请填写完整的订阅信息');
+                return;
+            }
+            
+            try {
+                const response = await axios.post('/api/subscriptions', {
+                    name: name,
+                    url: url
+                });
+                
+                if (response.data.success) {
+                    showSuccess('订阅源添加成功');
+                    // 关闭模态框
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('addSubscriptionModal'));
+                    modal.hide();
+                    // 重置表单
+                    document.getElementById('add-subscription-form').reset();
+                    // 重新加载订阅列表
+                    await loadSubscriptions();
+                } else {
+                    showError('添加订阅源失败: ' + response.data.message);
+                }
+            } catch (error) {
+                showError('添加订阅源失败: ' + (error.response?.data?.message || error.message));
+            }
+        }
+
+        // 重新生成API密钥
+        async function regenerateApiKey() {
+            if (!confirm('确定要重新生成API密钥吗？所有使用旧密钥的客户端将无法连接。')) {
+                return;
+            }
+            
+            try {
+                const response = await axios.post('/api/user/regenerate-api-key');
+                
+                if (response.data.api_key) {
+                    // 更新显示
+                    document.getElementById('api-key').textContent = response.data.api_key;
+                    document.getElementById('api-key-short').textContent = response.data.api_key.substring(0, 8) + '...';
+                    document.getElementById('current-api-key').textContent = response.data.api_key;
+                    
+                    // 更新保存的值
+                    userApiKey = response.data.api_key;
+                    
+                    showSuccess('API密钥已成功重新生成');
+                } else {
+                    showError('重新生成API密钥失败: ' + response.data.message);
+                }
+            } catch (error) {
+                showError('重新生成API密钥失败: ' + (error.response?.data?.message || error.message));
+            }
+        }
+
+        // 修改密码
+        async function changePassword(event) {
+            event.preventDefault();
+            
+            const currentPassword = document.getElementById('current-password').value;
+            const newPassword = document.getElementById('new-password').value;
+            const confirmNewPassword = document.getElementById('confirm-new-password').value;
+            
+            if (!currentPassword || !newPassword || !confirmNewPassword) {
+                showError('请填写所有密码字段');
+                return;
+            }
+            
+            if (newPassword !== confirmNewPassword) {
+                showError('新密码和确认密码不匹配');
+                return;
+            }
+            
+            try {
+                const response = await axios.post('/api/user/change-password', {
+                    current_password: currentPassword,
+                    new_password: newPassword
+                });
+                
+                if (response.data.success) {
+                    showSuccess('密码修改成功');
+                    document.getElementById('change-password-form').reset();
+                } else {
+                    showError('修改密码失败: ' + response.data.message);
+                }
+            } catch (error) {
+                showError('修改密码失败: ' + (error.response?.data?.message || error.message));
+            }
+        }
+
+        // 退出登录
+        async function logout() {
+            if (confirm('确定要退出登录吗？')) {
+                try {
+                    await axios.post('/api/auth/logout');
+                    window.location.href = '/login';
+                } catch (error) {
+                    showError('退出登录失败: ' + (error.response?.data?.message || error.message));
+                }
+            }
+        }
+
+        // 绑定事件监听器
+        function bindEventListeners() {
+            // 添加订阅
+            document.getElementById('add-subscription-btn').addEventListener('click', addSubscription);
+            
+            // 生成订阅链接
+            document.getElementById('generate-link-btn').addEventListener('click', generateSubscriptionLink);
+            
+            // 复制订阅链接
+            document.getElementById('copy-link-btn').addEventListener('click', copySubscriptionLink);
+            
+            // 跳转到订阅管理
+            document.getElementById('goto-subscriptions-btn').addEventListener('click', () => {
+                document.querySelector('a[href="#subscriptions"]').click();
             });
+            
+            // 重新生成API密钥
+            document.getElementById('regenerate-api-key-btn').addEventListener('click', regenerateApiKey);
+            
+            // 修改密码
+            document.getElementById('change-password-form').addEventListener('submit', changePassword);
+            
+            // 退出登录
+            document.getElementById('logout-btn').addEventListener('click', logout);
         }
 
         // 显示错误消息
         function showError(message) {
-            const errorElement = document.getElementById('error-message');
-            errorElement.textContent = message;
-            errorElement.style.display = 'block';
-            
-            // 5秒后隐藏
+            const errorEl = document.getElementById('error-message');
+            errorEl.textContent = message;
+            errorEl.style.display = 'block';
             setTimeout(() => {
-                errorElement.style.display = 'none';
+                errorEl.style.display = 'none';
             }, 5000);
         }
 
         // 显示成功消息
         function showSuccess(message) {
-            const successElement = document.getElementById('success-message');
-            successElement.textContent = message;
-            successElement.style.display = 'block';
-            
-            // 5秒后隐藏
+            const successEl = document.getElementById('success-message');
+            successEl.textContent = message;
+            successEl.style.display = 'block';
             setTimeout(() => {
-                successElement.style.display = 'none';
+                successEl.style.display = 'none';
             }, 5000);
         }
 
-        // 初始化页面
-        document.addEventListener('DOMContentLoaded', function() {
-            // 检查用户是否已登录
-            checkAuthentication();
-            
-            // 添加订阅按钮事件
-            document.getElementById('add-subscription-btn').addEventListener('click', addSubscription);
-            
-            // 生成链接按钮事件
-            document.getElementById('generate-link-btn').addEventListener('click', generateSubscriptionLink);
-            
-            // 复制链接按钮事件
-            document.getElementById('copy-link-btn').addEventListener('click', copyLinkToClipboard);
-            
-            // 注销按钮事件
-            document.getElementById('logout-btn').addEventListener('click', logout);
-            
-            // 添加"转到订阅管理"按钮事件 - 新增
-            document.getElementById('goto-subscriptions-btn').addEventListener('click', function() {
-                // 找到订阅管理选项卡并激活它
-                document.querySelector('a[href="#subscriptions"]').click();
-            });
-        });
+        // 显示信息提示
+        function showInfo(message) {
+            // 这里可以实现一个加载中的提示
+            console.log(message);
+        }
     </script>
 </body>
 </html> 
