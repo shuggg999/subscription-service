@@ -13,21 +13,38 @@ subscription_manager = SubscriptionManager()
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        print(f"请求路径: {request.path}, 方法: {request.method}, 所有Cookie: {request.cookies}")
+        # 打印详细的请求信息便于调试
+        print(f"============ 请求调试信息 开始 ============")
+        print(f"请求路径: {request.path}")
+        print(f"请求方法: {request.method}")
+        print(f"请求来源: {request.remote_addr}")
+        print(f"所有Cookie: {request.cookies}")
+        print(f"请求头部: {dict(request.headers)}")
+        print(f"============ 请求调试信息 结束 ============")
         
-        # 从多种来源尝试获取session_id
+        # 从所有可能的来源尝试获取session_id
+        session_id = None
+        
+        # 1. 从 cookie 获取
         session_id = request.cookies.get('session_id')
+        if session_id:
+            print(f"从所有cookie中找到session_id: {session_id}")
+            
+        # 2. 尝试从Authorization头获取
         if not session_id:
-            # 尝试从请求头获取
             auth_header = request.headers.get('Authorization')
             if auth_header and auth_header.startswith('Bearer '):
                 session_id = auth_header[7:]
-            
-        print(f"找到的会话ID: {session_id}")
+                print(f"从Authorization头找到session_id: {session_id}")
         
+        # 3. 尝试从session获取
+        if not session_id and 'session_id' in session:
+            session_id = session['session_id']
+            print(f"从Flask会话中找到session_id: {session_id}")
+            
         if not session_id:
-            print(f"会话ID缺失，请求headers: {request.headers}")
-            return jsonify({"success": False, "message": "未登录"}), 401
+            print(f"警告: 未找到任何session_id! 请使用/auth/debug/cookies进行调试")
+            return jsonify({"success": False, "message": "未登录或会话已过期"}), 401
         
         # 验证会话
         result = user_manager.validate_session(session_id)
@@ -149,17 +166,21 @@ def login():
             "api_key": result["api_key"]
         }))
         
-        # 设置cookie，确保正确设置路径
+        # 设置cookie，最简化配置以确保功能
         print(f"设置cookie session_id: {result['session_id']}")
         resp.set_cookie(
             'session_id', 
             result["session_id"], 
             max_age=7*24*60*60, 
-            httponly=True,
-            path='/',  # 确保全站适用
-            secure=False,  # 开发环境设为False
-            samesite='None'
+            httponly=False,  # 关闭httponly以方便调试
+            path='/',       # 确保全站适用
+            secure=False,   # 开发环境设为False
+            samesite=None   # 关闭samesite限制
         )
+        
+        # 同时存储到flask session
+        session['session_id'] = result["session_id"]
+        print(f"已将session_id存储到Flask session: {session['session_id']}")
         
         return resp
     except Exception as e:
@@ -178,6 +199,10 @@ def logout():
     resp.set_cookie('session_id', '', expires=0, path='/')
     resp.set_cookie('session_id', '', expires=0, path='/auth')
     resp.set_cookie('session_id', '', expires=0)
+    
+    # 清除session
+    if 'session_id' in session:
+        session.pop('session_id')
     
     return resp
 
@@ -299,10 +324,44 @@ def health_check():
 def debug_cookies():
     cookies = {k: v for k, v in request.cookies.items()}
     headers = {k: v for k, v in request.headers.items()}
+    
+    # 检查是否有session_id cookie
+    session_id_found = 'session_id' in cookies
+    session_value = cookies.get('session_id', '(未找到)')
+    
+    # 返回详细信息
     return jsonify({
         "cookies": cookies,
         "headers": headers,
-        "session_id_found": 'session_id' in cookies,
+        "session_id_found": session_id_found,
+        "session_id": session_value,
         "remote_addr": request.remote_addr,
-        "host": request.host
+        "host": request.host,
+        "referrer": request.referrer,
+        "user_agent": request.user_agent.string,
+        "secure": request.is_secure,
+        "flask_session": dict(session),
+        "is_session_in_flask_session": 'session_id' in session
     })
+
+# 设置测试Cookie的端点
+@auth_api.route('/debug/set_test_cookie', methods=['GET'])
+def set_test_cookie():
+    # 创建响应
+    resp = make_response(jsonify({
+        "success": True,
+        "message": "测试Cookie已设置"
+    }))
+    
+    # 设置测试cookie
+    resp.set_cookie(
+        'test_cookie', 
+        'cookie_value_' + str(int(time.time())), 
+        max_age=3600,
+        httponly=False,
+        path='/',
+        secure=False,
+        samesite=None
+    )
+    
+    return resp
