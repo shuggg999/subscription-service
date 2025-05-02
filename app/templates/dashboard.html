@@ -637,16 +637,18 @@
         // 加载用户信息
         async function loadUserInfo() {
             try {
-                const response = await axios.get('/api/user/info');
-                const userData = response.data;
+                const response = await axios.get('/auth/me');
+                const userData = response.data.user;
                 
                 // 更新用户信息
                 document.getElementById('username').textContent = userData.username;
                 document.getElementById('api-key').textContent = userData.api_key;
                 document.getElementById('api-key-short').textContent = userData.api_key.substring(0, 8) + '...';
                 document.getElementById('current-api-key').textContent = userData.api_key;
-                document.getElementById('user-role').textContent = userData.role;
-                document.getElementById('user-role-detail').textContent = userData.role;
+                document.getElementById('user-role').textContent = 
+                    userData.role === 'admin' ? '管理员' : '普通用户';
+                document.getElementById('user-role-detail').textContent = 
+                    userData.role === 'admin' ? '管理员' : '普通用户';
                 
                 // 保存API密钥
                 userApiKey = userData.api_key;
@@ -658,7 +660,7 @@
         // 加载订阅列表
         async function loadSubscriptions() {
             try {
-                const response = await axios.get('/api/subscriptions');
+                const response = await axios.get('/auth/subscriptions');
                 const subscriptions = response.data.subscriptions;
                 
                 // 保存订阅
@@ -694,9 +696,9 @@
                     const formattedDate = createdDate.toLocaleDateString() + ' ' + createdDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
                     
                     // 状态显示
-                    const statusClass = sub.active ? 'text-success' : 'text-danger';
-                    const statusIcon = sub.active ? 'bi-check-circle-fill' : 'bi-x-circle-fill';
-                    const statusText = sub.active ? '正常' : '禁用';
+                    const statusClass = sub.is_active ? 'text-success' : 'text-danger';
+                    const statusIcon = sub.is_active ? 'bi-check-circle-fill' : 'bi-x-circle-fill';
+                    const statusText = sub.is_active ? '正常' : '禁用';
                     
                     row.innerHTML = `
                         <td class="text-center">${index + 1}</td>
@@ -761,7 +763,7 @@
             try {
                 showInfo('正在测试订阅源...');
                 
-                const response = await axios.post(`/api/subscriptions/${subId}/test`);
+                const response = await axios.post(`/auth/subscriptions/${subId}/test`);
                 
                 if (response.data.success) {
                     showSuccess('订阅源测试成功!');
@@ -792,7 +794,7 @@
             }
             
             try {
-                const response = await axios.delete(`/api/subscriptions/${subId}`);
+                const response = await axios.delete(`/auth/subscriptions/${subId}`);
                 
                 if (response.data.success) {
                     showSuccess('订阅源已成功删除');
@@ -810,10 +812,10 @@
             const clientType = document.getElementById('client-type').value;
             
             try {
-                const response = await axios.get(`/api/subscriptions/link?type=${clientType}`);
+                const response = await axios.get(`/auth/generate_subscription_link?client_type=${clientType}`);
                 
-                if (response.data.url) {
-                    document.getElementById('subscription-url').value = response.data.url;
+                if (response.data.success) {
+                    document.getElementById('subscription-url').value = response.data.subscription_url;
                     document.getElementById('subscription-url-container').style.display = 'block';
                     showSuccess('订阅链接生成成功');
                 } else {
@@ -844,7 +846,7 @@
             }
             
             try {
-                const response = await axios.post('/api/subscriptions', {
+                const response = await axios.post('/auth/subscriptions', {
                     name: name,
                     url: url
                 });
@@ -873,9 +875,9 @@
             }
             
             try {
-                const response = await axios.post('/api/user/regenerate-api-key');
+                const response = await axios.post('/auth/regenerate_api_key');
                 
-                if (response.data.api_key) {
+                if (response.data.success) {
                     // 更新显示
                     document.getElementById('api-key').textContent = response.data.api_key;
                     document.getElementById('api-key-short').textContent = response.data.api_key.substring(0, 8) + '...';
@@ -912,7 +914,7 @@
             }
             
             try {
-                const response = await axios.post('/api/user/change-password', {
+                const response = await axios.post('/auth/change_password', {
                     current_password: currentPassword,
                     new_password: newPassword
                 });
@@ -932,7 +934,7 @@
         async function logout() {
             if (confirm('确定要退出登录吗？')) {
                 try {
-                    await axios.post('/api/auth/logout');
+                    await axios.post('/auth/logout');
                     window.location.href = '/login';
                 } catch (error) {
                     showError('退出登录失败: ' + (error.response?.data?.message || error.message));
