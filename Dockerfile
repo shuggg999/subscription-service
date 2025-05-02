@@ -1,7 +1,7 @@
 FROM python:3.9-slim
 
 # 安装必要的依赖
-RUN pip install --no-cache-dir requests flask
+RUN pip install --no-cache-dir requests flask flask-session
 
 # 设置工作目录
 WORKDIR /app

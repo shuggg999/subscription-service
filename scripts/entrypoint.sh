@@ -14,6 +14,10 @@ echo "监听端口: $PORT"
 # 确保数据目录存在
 mkdir -p /opt/sub_merger
 
+# 确保Flask会话目录存在
+mkdir -p /opt/sub_merger/flask_sessions
+chmod 777 /opt/sub_merger/flask_sessions
+
 # 从环境变量设置访问令牌
 if [ -n "$ACCESS_TOKEN" ]; then
     echo "$ACCESS_TOKEN" > /opt/sub_merger/access_token.txt
