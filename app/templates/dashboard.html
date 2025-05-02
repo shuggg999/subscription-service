@@ -9,6 +9,7 @@
     <style>
         body {
             background-color: #f8f9fa;
+            overflow-x: hidden;
         }
         .sidebar {
             position: fixed;
@@ -19,6 +20,7 @@
             padding: 48px 0 0;
             box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
             background-color: #343a40;
+            width: 220px; /* 修改固定宽度 */
         }
         .sidebar-sticky {
             position: relative;
@@ -48,8 +50,9 @@
             padding-bottom: .75rem;
         }
         .main-content {
-            margin-left: 240px;
+            margin-left: 220px; /* 与侧边栏宽度保持一致 */
             padding: 1.5rem;
+            width: calc(100% - 220px); /* 确保内容区域宽度正确 */
         }
         .alert {
             display: none;
@@ -62,6 +65,7 @@
             }
             .main-content {
                 margin-left: 0;
+                width: 100%;
             }
         }
         .loader {
@@ -83,6 +87,20 @@
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+        /* 修复按钮点击问题 */
+        .card-body .btn {
+            position: relative;
+            z-index: 10;
+        }
+        /* 确保内容在小屏幕上正确显示 */
+        .container-fluid {
+            padding-left: 0;
+            padding-right: 0;
+        }
+        /* 修复表格在小屏幕上的显示 */
+        .table-responsive {
+            overflow-x: auto;
         }
     </style>
 </head>
@@ -164,9 +182,9 @@
                                             <li>生成您的个人订阅链接</li>
                                             <li>将生成的链接添加到您的客户端</li>
                                         </ol>
-                                        <a href="#subscriptions" class="btn btn-primary" data-bs-toggle="tab">
+                                        <button class="btn btn-primary" id="goto-subscriptions-btn">
                                             <i class="bi bi-plus-circle"></i> 添加订阅源
-                                        </a>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -609,6 +627,12 @@
             
             // 注销按钮事件
             document.getElementById('logout-btn').addEventListener('click', logout);
+            
+            // 添加"转到订阅管理"按钮事件 - 新增
+            document.getElementById('goto-subscriptions-btn').addEventListener('click', function() {
+                // 找到订阅管理选项卡并激活它
+                document.querySelector('a[href="#subscriptions"]').click();
+            });
         });
     </script>
 </body>
