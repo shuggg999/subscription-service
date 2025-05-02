@@ -37,4 +37,4 @@ touch /var/log/sub_merger.log
 
 # 运行订阅服务
 cd /app
-python -u subscription_service.py >> $LOG_FILE 2>&1
+python -u subscription_service.py --start >> $LOG_FILE 2>&1

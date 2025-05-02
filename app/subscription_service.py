@@ -638,15 +638,9 @@ def main():
     # 处理命令行参数
     if args.start:
         port = load_port()
-        server_thread = start_server_thread(port)
-        
-        # 保持主线程运行
-        try:
-            while True:
-                time.sleep(1)
-        except KeyboardInterrupt:
-            logger.info("服务已停止")
-            sys.exit(0)
+        # 直接启动Flask应用，而不是基本HTTP服务器
+        logger.info(f"启动Flask应用，监听端口: {port}")
+        app.run(host='0.0.0.0', port=port, debug=False)
             
     elif args.add:
         name, url = args.add
@@ -757,4 +751,5 @@ def dashboard_page():
     return render_template('dashboard.html')
 
 if __name__ == "__main__":
+    # 直接调用main函数处理命令行参数
     main()
