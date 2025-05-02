@@ -3,7 +3,7 @@ import json
 import time
 from flask import Blueprint, request, jsonify, session, make_response
 from functools import wraps
-from .models import UserManager, SubscriptionManager
+from models import UserManager, SubscriptionManager
 
 auth_api = Blueprint('auth_api', __name__)
 user_manager = UserManager()

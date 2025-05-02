@@ -21,8 +21,8 @@ import hmac
 import secrets
 from datetime import datetime, timedelta
 from flask import Flask, request, jsonify, render_template, redirect, url_for, abort
-from .models import UserManager, SubscriptionManager
-from .auth_api import auth_api
+from models import UserManager, SubscriptionManager
+from auth_api import auth_api
 
 # 配置日志
 logging.basicConfig(
@@ -588,6 +588,16 @@ def update_access_token(token):
 def update_port(port):
     return save_port(port)
 
+# 保存端口
+def save_port(port):
+    try:
+        with open(PORT_FILE, 'w') as f:
+            f.write(str(port))
+        return True
+    except Exception as e:
+        logger.error(f"保存端口配置失败: {str(e)}")
+        return False
+
 # 生成所有订阅信息
 def generate_all_subscription_info():
     server_ip = get_external_ip()
@@ -688,7 +698,7 @@ def main():
             print("更新访问令牌失败")
             
     elif args.port:
-        if update_port(args.port):
+        if save_port(args.port):
             print(f"已更新端口: {args.port}")
         else:
             print("更新端口失败")

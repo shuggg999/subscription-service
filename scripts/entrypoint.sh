@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# 导出环境变量使pythons可以使用
+# 导出环境变量使Python可以使用
 export PYTHONPATH=/app:$PYTHONPATH
 
 # 设置日志目录
@@ -37,4 +37,4 @@ touch /var/log/sub_merger.log
 
 # 运行订阅服务
 cd /app
-python subscription_service.py --port $PORT >> $LOG_FILE 2>&1
+python -u subscription_service.py >> $LOG_FILE 2>&1
