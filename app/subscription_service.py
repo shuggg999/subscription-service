@@ -700,36 +700,16 @@ def main():
     else:
         parser.print_help()
 
-# 初始化Flask会话管理
-def init_session_management(app):
-    try:
-        from flask_session import Session
-        app.config['SESSION_TYPE'] = 'filesystem'
-        app.config['SESSION_FILE_DIR'] = '/opt/sub_merger/flask_sessions'
-        app.config['SESSION_PERMANENT'] = True
-        app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=7)  # 会话有时间期限
-        Session(app)
-        logger.info("Flask会话管理初始化成功")
-    except ImportError:
-        logger.warning("flask_session包不可用，使用默认的cookie会话")
-        # 使用默认的基于cookie的会话
-        app.config['SESSION_COOKIE_SECURE'] = False  # 非https环境设置为False
-        app.config['SESSION_COOKIE_HTTPONLY'] = True  # 防止JavaScript访问
-        app.config['SESSION_COOKIE_SAMESITE'] = None  # 允许跨站点请求
-        app.config['SESSION_COOKIE_PATH'] = '/'
-        app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=7)  # 会话有时间期限
-    except Exception as e:
-        logger.error(f"初始化Flask会话时出错: {str(e)}")
-        # 使用基本的cookie配置
-        app.config['SESSION_COOKIE_PATH'] = '/'
-        app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=7)
-
 # 在app初始化之后注册蓝图
 app = Flask(__name__)
 # 配置安全的密钥
 app.secret_key = os.environ.get('SECRET_KEY', 'your_secure_secret_key_change_in_production')
-# 初始化会话管理
-init_session_management(app)
+# 配置Flask会话
+app.config['SESSION_COOKIE_SECURE'] = False  # 非https环境设置为False
+app.config['SESSION_COOKIE_HTTPONLY'] = True  # 基本安全设置
+app.config['SESSION_COOKIE_SAMESITE'] = None  # 允许跨站点请求
+app.config['SESSION_COOKIE_PATH'] = '/'
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=7)  # 会话有效期
 # 注册蓝图
 app.register_blueprint(auth_api, url_prefix='/auth')
 

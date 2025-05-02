@@ -175,6 +175,33 @@ class UserManager:
             if conn:
                 conn.close()
     
+    def get_user_by_id(self, user_id):
+        try:
+            conn = self.db.get_connection()
+            cursor = conn.cursor()
+            
+            # 获取用户信息
+            user = cursor.execute(
+                "SELECT id, username, role, api_key FROM users WHERE id = ? AND is_active = 1", 
+                (user_id,)
+            ).fetchone()
+            
+            if not user:
+                return {"success": False, "message": "用户不存在或已被禁用"}
+            
+            return {
+                "success": True,
+                "user_id": user[0],
+                "username": user[1],
+                "role": user[2],
+                "api_key": user[3]
+            }
+        except Exception as e:
+            return {"success": False, "message": f"获取用户信息失败: {str(e)}"}
+        finally:
+            if conn:
+                conn.close()
+    
     def validate_session(self, session_id):
         try:
             conn = self.db.get_connection()
@@ -371,4 +398,4 @@ class SubscriptionManager:
             return {"success": False, "message": f"更新失败: {str(e)}"}
         finally:
             if conn:
-                conn.close() 
+                conn.close()
