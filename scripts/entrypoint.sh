@@ -1,6 +1,17 @@
-#!/bin/sh
+#!/bin/bash
+set -e
 
-# 确保配置目录存在
+# 导出环境变量使pythons可以使用
+export PYTHONPATH=/app:$PYTHONPATH
+
+# 设置日志目录
+mkdir -p /var/log/subscription
+LOG_FILE="/var/log/subscription/app.log"
+
+echo "启动订阅合并服务..."
+echo "监听端口: $PORT"
+
+# 确保数据目录存在
 mkdir -p /opt/sub_merger
 
 # 从环境变量设置访问令牌
@@ -24,6 +35,6 @@ fi
 # 确保日志文件存在
 touch /var/log/sub_merger.log
 
-# 启动订阅服务
-echo "启动Python订阅服务..."
-exec python /app/subscription_service.py --start
+# 运行订阅服务
+cd /app
+python subscription_service.py --port $PORT >> $LOG_FILE 2>&1
