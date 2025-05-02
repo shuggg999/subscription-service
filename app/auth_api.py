@@ -13,9 +13,20 @@ subscription_manager = SubscriptionManager()
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
+        print(f"请求路径: {request.path}, 方法: {request.method}, 所有Cookie: {request.cookies}")
+        
+        # 从多种来源尝试获取session_id
         session_id = request.cookies.get('session_id')
         if not session_id:
-            print(f"会话ID缺失，请求cookies: {request.cookies}")
+            # 尝试从请求头获取
+            auth_header = request.headers.get('Authorization')
+            if auth_header and auth_header.startswith('Bearer '):
+                session_id = auth_header[7:]
+            
+        print(f"找到的会话ID: {session_id}")
+        
+        if not session_id:
+            print(f"会话ID缺失，请求headers: {request.headers}")
             return jsonify({"success": False, "message": "未登录"}), 401
         
         # 验证会话
@@ -23,7 +34,10 @@ def login_required(f):
         if not result["success"]:
             print(f"会话验证失败: {result.get('message', '未知错误')}, session_id: {session_id}")
             resp = make_response(jsonify({"success": False, "message": "会话已过期或无效"}), 401)
-            resp.set_cookie('session_id', '', expires=0, path='/')  # 清除无效的cookie
+            # 在所有可能的路径上清除cookie
+            resp.set_cookie('session_id', '', expires=0, path='/')
+            resp.set_cookie('session_id', '', expires=0, path='/auth')
+            resp.set_cookie('session_id', '', expires=0)
             return resp
         
         # 将用户信息添加到请求中
@@ -144,7 +158,7 @@ def login():
             httponly=True,
             path='/',  # 确保全站适用
             secure=False,  # 开发环境设为False
-            samesite='Lax'
+            samesite='None'
         )
         
         return resp
@@ -161,6 +175,8 @@ def logout():
     
     # 清除cookie
     resp = make_response(jsonify(result))
+    resp.set_cookie('session_id', '', expires=0, path='/')
+    resp.set_cookie('session_id', '', expires=0, path='/auth')
     resp.set_cookie('session_id', '', expires=0)
     
     return resp
@@ -276,4 +292,17 @@ def service_get_subscriptions():
 # 健康检查接口
 @auth_api.route('/health', methods=['GET'])
 def health_check():
-    return jsonify({"status": "ok", "timestamp": int(time.time())}) 
+    return jsonify({"status": "ok", "timestamp": int(time.time())})
+
+# Cookie 调试接口
+@auth_api.route('/debug/cookies', methods=['GET'])
+def debug_cookies():
+    cookies = {k: v for k, v in request.cookies.items()}
+    headers = {k: v for k, v in request.headers.items()}
+    return jsonify({
+        "cookies": cookies,
+        "headers": headers,
+        "session_id_found": 'session_id' in cookies,
+        "remote_addr": request.remote_addr,
+        "host": request.host
+    })

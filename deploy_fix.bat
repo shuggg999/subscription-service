@@ -1,4 +1,22 @@
 @echo off
+echo Starting to redeploy subscription service with fixes...
+
+:: Stop existing containers
+echo Stopping existing containers...
+docker-compose down
+
+:: Rebuild the containers
+echo Rebuilding services...
+docker-compose build
+
+:: Start the services
+echo Starting services...
+docker-compose up -d
+
+:: Show logs
+echo Showing logs (press Ctrl+C to exit)...
+docker-compose logs -f
+@echo off
 echo ===== Starting Subscription Service Deployment =====
 echo.
 

@@ -703,6 +703,11 @@ def main():
 # 在app初始化之后注册蓝图
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'your_secure_secret_key')
+# 针对运行环境进行 cookie 设置
+app.config['SESSION_COOKIE_SECURE'] = False  # 在生产环境可设置为 True
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'  # None, Lax, Strict
+app.config['SESSION_COOKIE_PATH'] = '/'
 app.register_blueprint(auth_api, url_prefix='/auth')
 
 # 添加现有认证方案与新认证方案的兼容性
