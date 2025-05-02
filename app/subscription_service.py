@@ -709,28 +709,68 @@ app.register_blueprint(auth_api, url_prefix='/auth')
 # 在订阅处理函数中增加API密钥认证支持
 @app.route('/sub', methods=['GET'])
 def get_subscription():
-    # 支持新的API密钥认证
-    api_key = request.args.get('api_key')
-    if api_key:
-        user_manager = UserManager()
-        user_result = user_manager.get_user_by_api_key(api_key)
-        if user_result["success"]:
-            # 使用用户ID获取订阅
-            user_id = user_result["user_id"]
-            sub_manager = SubscriptionManager()
-            subscriptions = sub_manager.get_subscriptions(user_id)
+    try:
+        # 支持新的API密钥认证
+        api_key = request.args.get('api_key')
+        if api_key:
+            user_manager = UserManager()
+            user_result = user_manager.get_user_by_api_key(api_key)
+            if user_result["success"]:
+                # 使用用户ID获取订阅
+                user_id = user_result["user_id"]
+                sub_manager = SubscriptionManager()
+                subscriptions = sub_manager.get_subscriptions(user_id)
+                
+                if not subscriptions["success"] or not subscriptions["subscriptions"]:
+                    return "未配置订阅源", 404
+                
+                # 处理订阅并返回
+                # 收集订阅URL
+                subscription_urls = [s["url"] for s in subscriptions["subscriptions"] if s["active"]]
+                
+                if not subscription_urls:
+                    return "无可用订阅源", 404
+                    
+                # 合并订阅
+                try:
+                    merged_content = merge_subscriptions(subscription_urls)
+                    # 转换为客户端格式
+                    target = request.args.get('target', 'clash')
+                    final_content = convert_to_client_format(merged_content, target)
+                    return final_content
+                except Exception as e:
+                    logger.error(f"合并订阅失败: {str(e)}")
+                    return f"合并订阅失败: {str(e)}", 500
+        
+        # 向后兼容旧的令牌认证
+        token = request.args.get('token')
+        access_token = load_access_token()
+        
+        if token != access_token:
+            logger.warning(f"无效的访问令牌: {token}")
+            return "无效的访问令牌", 403
             
-            if not subscriptions["success"] or not subscriptions["subscriptions"]:
-                return "未配置订阅源", 404
+        # 获取所有订阅
+        subscriptions = load_subscriptions()
+        subscription_urls = [sub["url"] for sub in subscriptions]
+        
+        if not subscription_urls:
+            return "未配置订阅源", 404
             
-            # 处理订阅并返回
-            # 这里需要保留原有的订阅处理代码
-            # ...
-    
-    # 向后兼容旧的令牌认证
-    token = request.args.get('token')
-    # 原有的令牌认证逻辑
-    # ...
+        # 合并订阅
+        try:
+            merged_content = merge_subscriptions(subscription_urls)
+            # 转换为客户端格式
+            target = request.args.get('target', 'clash')
+            final_content = convert_to_client_format(merged_content, target)
+            return final_content
+        except Exception as e:
+            logger.error(f"合并订阅失败: {str(e)}")
+            return f"合并订阅失败: {str(e)}", 500
+            
+    except Exception as e:
+        logger.error(f"处理订阅请求出错: {str(e)}")
+        return f"处理订阅请求出错: {str(e)}", 500
 
 # 添加主页重定向到登录页面
 @app.route('/', methods=['GET'])

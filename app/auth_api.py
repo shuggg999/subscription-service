@@ -15,13 +15,15 @@ def login_required(f):
     def decorated_function(*args, **kwargs):
         session_id = request.cookies.get('session_id')
         if not session_id:
+            print(f"会话ID缺失，请求cookies: {request.cookies}")
             return jsonify({"success": False, "message": "未登录"}), 401
         
         # 验证会话
         result = user_manager.validate_session(session_id)
         if not result["success"]:
+            print(f"会话验证失败: {result.get('message', '未知错误')}, session_id: {session_id}")
             resp = make_response(jsonify({"success": False, "message": "会话已过期或无效"}), 401)
-            resp.set_cookie('session_id', '', expires=0)  # 清除无效的cookie
+            resp.set_cookie('session_id', '', expires=0, path='/')  # 清除无效的cookie
             return resp
         
         # 将用户信息添加到请求中
@@ -109,38 +111,46 @@ def register():
 # 登录接口
 @auth_api.route('/login', methods=['POST'])
 def login():
-    data = request.json
-    username = data.get('username')
-    password = data.get('password')
-    
-    if not username or not password:
-        return jsonify({"success": False, "message": "用户名和密码不能为空"}), 400
-    
-    result = user_manager.authenticate_user(username, password)
-    
-    if not result["success"]:
-        return jsonify(result), 401
-    
-    # 创建带会话ID的响应
-    resp = make_response(jsonify({
-        "success": True,
-        "message": "登录成功",
-        "username": result["username"],
-        "role": result["role"],
-        "api_key": result["api_key"]
-    }))
-    
-    # 设置cookie，7天过期
-    resp.set_cookie(
-        'session_id', 
-        result["session_id"], 
-        max_age=7*24*60*60, 
-        httponly=True,
-        secure=request.is_secure,  # 在HTTPS时设为True
-        samesite='Lax'
-    )
-    
-    return resp
+    try:
+        data = request.json
+        username = data.get('username')
+        password = data.get('password')
+        
+        print(f"登录尝试: {username}")
+        
+        if not username or not password:
+            return jsonify({"success": False, "message": "用户名和密码不能为空"}), 400
+        
+        result = user_manager.authenticate_user(username, password)
+        
+        if not result["success"]:
+            return jsonify(result), 401
+        
+        # 创建带会话ID的响应
+        resp = make_response(jsonify({
+            "success": True,
+            "message": "登录成功",
+            "username": result["username"],
+            "role": result["role"],
+            "api_key": result["api_key"]
+        }))
+        
+        # 设置cookie，确保正确设置路径
+        print(f"设置cookie session_id: {result['session_id']}")
+        resp.set_cookie(
+            'session_id', 
+            result["session_id"], 
+            max_age=7*24*60*60, 
+            httponly=True,
+            path='/',  # 确保全站适用
+            secure=False,  # 开发环境设为False
+            samesite='Lax'
+        )
+        
+        return resp
+    except Exception as e:
+        print(f"登录错误: {str(e)}")
+        return jsonify({"success": False, "message": f"登录过程中发生错误: {str(e)}"}), 500
 
 # 注销接口
 @auth_api.route('/logout', methods=['POST'])
