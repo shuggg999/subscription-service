@@ -1,0 +1,43 @@
+version: '3'
+
+services:
+  # 订阅合并服务
+  subscription-service:
+    build: .
+    container_name: subscription-service
+    ports:
+      - "25500:25500"  # 订阅服务端口
+    volumes:
+      - subscription_config:/opt/sub_merger  # 订阅配置持久存储
+      - subscription_logs:/var/log           # 订阅日志持久存储
+    environment:
+      - ACCESS_TOKEN=${ACCESS_TOKEN:-your_access_token_here}  # 访问令牌
+      - PORT=25500                           # 服务端口
+      - ADMIN_USERNAME=${ADMIN_USERNAME:-admin}  # 管理员用户名
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-your_secure_password}  # 管理员密码
+    restart: always
+    networks:
+      - subscription_network
+
+  # Web界面（可选）
+  nginx:
+    image: nginx:stable-alpine
+    container_name: subscription-web
+    ports:
+      - "8080:80"  # HTTP端口
+    volumes:
+      - ./nginx/html:/usr/share/nginx/html  # 静态文件
+      - ./nginx/conf/default.conf:/etc/nginx/conf.d/default.conf  # 配置文件
+    depends_on:
+      - subscription-service
+    restart: always
+    networks:
+      - subscription_network
+
+volumes:
+  subscription_config:
+  subscription_logs:
+
+networks:
+  subscription_network:
+    driver: bridge

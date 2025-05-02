@@ -1,0 +1,11 @@
+{
+  "port": 25500,
+  "access_token": "your_access_token_here",
+  "admin": {
+    "username": "admin",
+    "password": "your_secure_password"
+  },
+  "subscriptions": [],
+  "cache_time": 3600,
+  "cache_file": "/app/data/cache.json"
+}
