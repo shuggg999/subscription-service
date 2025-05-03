@@ -1,0 +1,46 @@
+name: 构建和推送订阅服务Docker镜像
+
+on:
+  push:
+    branches: [ main, master ]  # 同时支持main和master分支
+    paths-ignore:
+      - '**.md'
+      - '.gitignore'
+  # 添加手动触发选项
+  workflow_dispatch:
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v3
+      
+      - name: 设置Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      
+      - name: 登录到DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: 提取元数据（标签、标记）
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ secrets.DOCKERHUB_USERNAME }}/subscription-service
+          tags: |
+            type=raw,value=latest
+            type=ref,event=branch
+            type=sha,format=short
+      
+      - name: 构建并推送订阅服务镜像
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/subscription-service:buildcache
+          cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/subscription-service:buildcache,mode=max 
