@@ -218,22 +218,27 @@ def decode_subscription(content):
     if content and any(content.startswith(prefix) for prefix in ('vless://', 'vmess://', 'trojan://', 'ss://')):
         return content
     
-    # 尝试Base64解码
-    if content and is_base64(content):
-        try:
-            decoded = base64.b64decode(content).decode('utf-8')
-            if any(decoded.startswith(prefix) for prefix in ('vless://', 'vmess://', 'trojan://', 'ss://')):
-                return decoded
-            else:
-                # 可能是多行base64
-                lines = decoded.strip().split('\n')
-                valid_links = [line for line in lines if any(line.startswith(prefix) for prefix in ('vless://', 'vmess://', 'trojan://', 'ss://'))]
-                if valid_links:
-                    return '\n'.join(valid_links)
-        except Exception as e:
-            logger.error(f"Base64解码失败: {e}")
+    # 首先尝试将内容视为一个完整的Base64字符串，去除所有换行符后解码
+    if content:
+        # 移除所有可能的换行符，合并为一个字符串
+        clean_content = re.sub(r'\s+', '', content)
+        
+        # 尝试Base64解码
+        if is_base64(clean_content):
+            try:
+                decoded = base64.b64decode(clean_content).decode('utf-8')
+                if any(decoded.startswith(prefix) for prefix in ('vless://', 'vmess://', 'trojan://', 'ss://')):
+                    return decoded
+                else:
+                    # 可能是多行base64
+                    lines = decoded.strip().split('\n')
+                    valid_links = [line for line in lines if any(line.startswith(prefix) for prefix in ('vless://', 'vmess://', 'trojan://', 'ss://'))]
+                    if valid_links:
+                        return '\n'.join(valid_links)
+            except Exception as e:
+                logger.error(f"合并Base64行解码失败: {e}")
     
-    # 如果还没有有效链接，再尝试按行解析
+    # 如果整体解码失败，尝试按行解析
     if content:
         lines = content.strip().split('\n')
         valid_links = []
